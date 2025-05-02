@@ -57,3 +57,13 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+
+### Supabase
+https://supabase.com/docs/guides/api/rest/generating-types
+```batch
+npx supabase login
+npx supabase init
+npx supabase gen types typescript --project-id "$PROJECT_REF" --schema public > database.types.ts
+npx supabase gen types typescript --local > database.types.ts
+```
+
