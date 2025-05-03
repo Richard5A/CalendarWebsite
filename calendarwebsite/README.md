@@ -63,7 +63,7 @@ https://supabase.com/docs/guides/api/rest/generating-types
 ```batch
 npx supabase login
 npx supabase init
-npx supabase gen types typescript --project-id "$PROJECT_REF" --schema public > database.types.ts
-npx supabase gen types typescript --local > database.types.ts
+mkdir src/supabase_generated
+npx supabase gen types typescript --project-id vhsxebsoxhjtqnrmahmc --schema public > src/supabase_generated/database.types.ts
 ```
 
