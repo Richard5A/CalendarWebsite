@@ -1,4 +1,9 @@
 <h1>Login</h1>
+@if (isLoggedIn()) {
+  <p>(DEBUG) You are already logged in.</p>
+} @else {
+  <p>Please enter your credentials to log in.</p>
+}
 <div>
   <mat-form-field>
     <mat-label>Email</mat-label>

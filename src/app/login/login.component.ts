@@ -23,12 +23,25 @@ export class LoginComponent {
   readonly email = new FormControl('', [Validators.required, Validators.email]);
   readonly password = new FormControl('', [Validators.required])
   errorMessage = signal("");
-  private supabase = inject(SupabaseService)
+  private supabaseService = inject(SupabaseService)
+  isLoggedIn = signal(false);
 
   constructor() {
     merge(this.email.statusChanges, this.email.valueChanges)
       .pipe(takeUntilDestroyed())
       .subscribe(() => this.updateEmailErrorMessage());
+    this.updateLoginState();
+  }
+
+  private updateLoginState() {
+    this.supabaseService.supabaseClient.auth.getUser().then(user => {
+      console.log(user);
+      if (user.data.user != null) {
+        this.isLoggedIn.set(true);
+      } else {
+        this.isLoggedIn.set(false);
+      }
+    })
   }
 
   updateEmailErrorMessage() {
@@ -52,9 +65,10 @@ export class LoginComponent {
       this.errorMessage.set('Please enter a valid email');
       return;
     }
-    this.supabase.signInWithEmail({
+    this.supabaseService.signInWithEmail({
       email: email,
       password: password,
     })
+    this.updateLoginState()
   }
 }
