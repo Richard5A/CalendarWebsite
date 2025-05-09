@@ -1,0 +1,33 @@
+<h1>Login</h1>
+@if (isLoggedIn()) {
+  <p>(DEBUG) You are already logged in.</p>
+} @else {
+  <p>Please enter your credentials to log in.</p>
+}
+<div>
+  <mat-form-field>
+    <mat-label>Email</mat-label>
+    <input
+      matInput
+      [formControl]="email"
+      (blur)="updateEmailErrorMessage()"
+      required
+      type="email"
+    />
+    @if (email.invalid) {
+      <mat-error>{{ errorMessage() }}</mat-error>
+    }
+  </mat-form-field>
+  <mat-form-field>
+    <mat-label>
+      Password
+    </mat-label>
+    <input
+      matInput
+      [formControl]="password"
+      type="password"
+    />
+  </mat-form-field>
+  <button mat-button (click)="login()">Login</button>
+</div>
+
