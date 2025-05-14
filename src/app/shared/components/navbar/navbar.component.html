@@ -15,4 +15,9 @@
     <mat-option [value]="option.value">{{option.label}}</mat-option>
     }
   </mat-select>
+  <mat-button-toggle-group hideSingleSelectionIndicator>
+    <mat-button-toggle value="calendar" checked>Kalender</mat-button-toggle>
+    <mat-button-toggle value="tasks">Aufgaben</mat-button-toggle>
+    <mat-button-toggle value="idk">IDK</mat-button-toggle>
+  </mat-button-toggle-group>
 </mat-toolbar>

@@ -1,5 +1,6 @@
 <div class="mainComponent">
-<app-navbar (toggleSidebar)="toggleSidebar()" />
-  <app-sidebar [toggleSidebar]="toggleSidebarEvent" />
-  <router-outlet />
+  <app-sidebar [sidebarOpen]="sidebarOpen">
+    <app-navbar (toggleSidebar)="toggleSidebar()" />
+    <router-outlet />
+  </app-sidebar>
 </div>

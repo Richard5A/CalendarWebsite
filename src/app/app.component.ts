@@ -13,9 +13,9 @@ import { SidebarComponent } from './shared/components/sidebar/sidebar.component'
 export class AppComponent {
   title = 'Calendar Website';
 
-  toggleSidebarEvent = new EventEmitter<undefined>();
+  sidebarOpen: boolean = true;
 
   toggleSidebar() {
-    this.toggleSidebarEvent.emit();
+    this.sidebarOpen = !this.sidebarOpen;
   }
 }

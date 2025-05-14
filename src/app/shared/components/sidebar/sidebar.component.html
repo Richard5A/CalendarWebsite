@@ -1,1 +1,20 @@
-<p>sidebar works!</p>
+<mat-drawer-container class="drawer-container">
+  <mat-drawer mode="side" opened="{{sidebarOpen}}" class="drawer">
+    <button mat-raised-button><mat-icon>add</mat-icon> Eintragen</button>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>Meine Kalender</mat-panel-title>
+      </mat-expansion-panel-header>
+
+      @for (calendar of calendars; track calendar.id) {
+      <div class="calendar-select">
+        <mat-checkbox [color]="calendar.color" [checked]="calendar.selected">{{calendar.title}}</mat-checkbox>
+      </div>
+      }
+    </mat-expansion-panel>
+  </mat-drawer>
+  <mat-drawer-content class="content">
+    <ng-content></ng-content>
+  </mat-drawer-content>
+</mat-drawer-container>
