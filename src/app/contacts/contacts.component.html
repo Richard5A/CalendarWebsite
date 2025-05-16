@@ -1,12 +1,16 @@
 <div class="contacts-container">
-  <div class="contacts-sidebar">
-    <!-- Contacts list will go here -->
-    <div class="contacts-list">
-      <div class="contact-item">
-        <!-- Individual contact items will be rendered here -->
-      </div>
-    </div>
-  </div>
+  <mat-selection-list class="contacts-sidebar" multiple="false" hideSingleSelectionIndicator="true">
+    @for (contact of users(); track contact.id) {
+      <mat-list-option class="contact-item">
+        <div class="contact-avatar">
+        </div>
+        <div class="contact-name">
+          {{contact.first_name + " " + contact.last_name}}
+        </div>
+      </mat-list-option>
+    }
+  </mat-selection-list>
+
   <div class="contacts-content">
     TODO
   </div>
