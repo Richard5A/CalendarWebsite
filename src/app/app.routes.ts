@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 
 import { CalendarLayoutComponent } from './layouts/calendar-layout/calendar-layout.component';
-import { LoginComponent } from './login/login.component';
-import { ContactsComponent } from './contacts/contacts.component';
+import { LoginComponent } from './shared/components/login/login.component';
+import { ContactsComponent } from './shared/components/contacts/contacts.component';
 
 export const routes: Routes = [
   {

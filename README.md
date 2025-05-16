@@ -58,6 +58,11 @@ Angular CLI does not come with an end-to-end testing framework by default. You c
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
 
+## File Structure
+- Standalone Components (ex.: Sidebar, Navbar) → **shared/components/**
+- Page Components (ex.: Calendar View) → **layouts/**
+- Important Components (ex.: reused often everywhere) → **core/**
+
 ### Supabase
 https://supabase.com/docs/guides/api/rest/generating-types
 ```batch

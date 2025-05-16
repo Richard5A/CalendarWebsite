@@ -3,7 +3,7 @@ import {MatError, MatFormField, MatInput, MatLabel} from '@angular/material/inpu
 import {FormControl, ReactiveFormsModule, Validators} from '@angular/forms';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {merge} from 'rxjs';
-import {SupabaseService} from '../core/services/SupabaseService';
+import {SupabaseService} from '../../../core/services/SupabaseService';
 import {MatButton} from '@angular/material/button';
 
 @Component({
