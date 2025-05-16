@@ -1,8 +1,19 @@
-.mainComponent {
-  background: var(--mat-sys-surface);
-  color: var(--mat-sys-on-surface);
-  display: flex;
-  flex-direction: column;
+.main-component {
+  background-color: var(--mat-sys-primary-container);
+  color: var(--mat-sys-on-primary-container);
   height: 100vh;
   width: 100vw;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.main {
+  flex: 1;
+  background-color: var(--mat-sys-surface);
+  border-top-left-radius: 16px;
+  padding: 16px;
 }
