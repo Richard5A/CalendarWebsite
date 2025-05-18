@@ -1,7 +1,7 @@
 import {Component, inject, signal} from '@angular/core';
 import {MatListOption, MatSelectionList} from '@angular/material/list';
-import {Tables} from '../../supabase_generated/database.types';
-import {ContactsService} from '../core/services/contacts.service';
+import {Tables} from '../../../../supabase_generated/database.types';
+import {ContactsService} from '../../../core/services/contacts.service';
 
 @Component({
   selector: 'app-contacts',
