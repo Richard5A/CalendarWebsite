@@ -26,6 +26,9 @@ export class ContactsComponent {
   }
 
   onUserSelected(user: Tables<"Users">) {
+    if(this.selectedUser() === user) {
+      return;
+    }
     this.selectedUser.set(user);
     this.selectedUserInfos.set(null)
     this.contactsService.getContactInfosOfUser(user.id).then(infos => {
