@@ -1,10 +1,19 @@
 <div class="main-component">
   <app-sidebar [sidebarOpen]="sidebarOpen">
     <div class="container">
-      <app-navbar (toggleSidebar)="toggleSidebar()"/>
+      <app-navbar (toggleSidebar)="toggleSidebar()" (calendarViewChanged)="calendarViewChanged($event)"/>
 
       <main class="main">
-        lol
+        (DEBUG Showing view <b>{{calendarView()}}</b>)
+        @if (calendarEvents() == null) {
+          <div class="loading">
+            <mat-spinner></mat-spinner>
+          </div>
+        } @else {
+          @for (event of calendarEvents(); track event.id) {
+            {{event.start}} - {{event.end}}: {{event.title}}
+          }
+        }
       </main>
     </div>
   </app-sidebar>

@@ -4,6 +4,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import {
+  CalendarDisplayView,
+  CalendarDisplayViewList
+} from '../../../layouts/calendar-layout/enums/calendar-display-view';
 
 @Component({
   selector: 'app-navbar',
@@ -13,11 +17,6 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 })
 export class NavbarComponent {
   @Output() toggleSidebar = new EventEmitter<undefined>();
-
-  options: any[] = [
-    {value: "day", label: "Tag"},
-    {value: "week", label: "Woche"},
-    {value: "month", label: "Monat"},
-    {value: "year", label: "Jahr"},
-  ];
+  @Output() calendarViewChanged = new EventEmitter<CalendarDisplayView>();
+  protected readonly CalendarDisplayViewList = CalendarDisplayViewList;
 }

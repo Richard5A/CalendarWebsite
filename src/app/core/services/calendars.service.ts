@@ -11,7 +11,7 @@ export class CalendarsService {
 
   async getCalendars(): Promise<Tables<"Calendars">[]> {
     const { data, error } = await this.supabaseService.supabaseClient
-      .from('calendar')
+      .from('Calendars')
       .select('*');
     if (error) {
       console.error('Error fetching calendars:', error);
@@ -22,7 +22,7 @@ export class CalendarsService {
 
   async getCalendarEvents(calendarId: number): Promise<Tables<"Events">[]> {
     const { data, error } = await this.supabaseService.supabaseClient
-      .from('calendar_events')
+      .from('Events')
       .select('*')
       .eq('calendar_id', calendarId);
     if (error) {
