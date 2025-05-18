@@ -18,4 +18,14 @@ export class ContactsService {
     if (error) throw error;
     return data || [];
   }
+
+  async getContactInfosOfUser(userId: string): Promise<Tables<"UserContactInfos">[]> {
+    const { data, error } = await this.supabaseService.supabaseClient
+      .from('UserContactInfos')
+      .select('*')
+      .eq('user_id', userId);
+
+    if (error) throw error;
+    return data || [];
+  }
 }

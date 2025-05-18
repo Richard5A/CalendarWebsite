@@ -14,6 +14,8 @@ import {ContactsService} from '../core/services/contacts.service';
 })
 export class ContactsComponent {
   users = signal<Tables<"Users">[] | null>(null)
+  selectedUser = signal<Tables<"Users"> | null>(null);
+  selectedUserInfos = signal<Tables<"UserContactInfos">[] | null>(null);
   contactsService = inject(ContactsService)
 
   constructor() {
@@ -23,4 +25,13 @@ export class ContactsComponent {
     })
   }
 
+  onUserSelected(user: Tables<"Users">) {
+    this.selectedUser.set(user);
+    this.selectedUserInfos.set(null)
+    this.contactsService.getContactInfosOfUser(user.id).then(infos => {
+      this.selectedUserInfos.set(infos)
+    })
+  }
+
+  protected readonly Date = Date;
 }
