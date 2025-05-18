@@ -1,1 +1,45 @@
-<p>contacts-layout works!</p>
+<div class="contacts-container">
+  <mat-selection-list class="contacts-sidebar" multiple="false" hideSingleSelectionIndicator="true">
+    @if (users() == null){
+      Lade Kontakte...
+    } @else if (users()?.length === 0) {
+      Keine Kontakte vorhanden.
+    }
+    @for (contact of users(); track contact.id) {
+      <mat-list-option class="contact-item" [selected]="selectedUser()?.id == contact.id" (click)="onUserSelected(contact)">
+        <div class="contact-avatar">
+        </div>
+        <div class="contact-name">
+          {{contact.first_name + " " + contact.last_name}}
+        </div>
+      </mat-list-option>
+    }
+  </mat-selection-list>
+
+  <div class="contacts-content">
+    @if (selectedUser() == null) {
+      Kein Kontakt ausgewählt
+        <-- Klicke hier auf einen Kontakt
+    } @else {
+      <h2 class="contact-name">
+        {{selectedUser()!.first_name + " " + selectedUser()!.last_name}}
+      </h2>
+      Geboren {{ selectedUser()!.birth_date}} <br/>
+      Bio: {{ selectedUser()!.bio}} <br/>
+      Hier seit {{ selectedUser()?.created_at }} <br/>
+      Weitere Infos:
+      <ul>
+        @if (selectedUserInfos() == null) {
+          Lade Infos...
+        } @else if (selectedUserInfos()?.length === 0) {
+          Keine Infos vorhanden.
+        }
+        @for (info of selectedUserInfos(); track info.id) {
+          <li>
+            {{info.type}} | {{info.label}}: {{info.contact_info}}
+          </li>
+        }
+      </ul>
+    }
+  </div>
+</div>

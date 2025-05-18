@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 import { CalendarLayoutComponent } from './layouts/calendar-layout/calendar-layout.component';
 import { LoginComponent } from './shared/components/login/login.component';
-import { ContactsComponent } from './shared/components/contacts/contacts.component';
+import { ContactsLayoutComponent } from './layouts/contacts-layout/contacts-layout.component';
 
 export const routes: Routes = [
   {
@@ -18,7 +18,7 @@ export const routes: Routes = [
   {
     path: "contacts",
     loadComponent: () => {
-      return ContactsComponent;
+      return ContactsLayoutComponent;
     }
   },
   // For developing purposes only.

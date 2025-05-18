@@ -1,0 +1,37 @@
+:host, html, body, app-root {
+  height: 100%;
+  min-height: 100%;
+}
+
+:host {
+  display: flex;
+  flex: 1;
+  height: 100%;
+}
+
+.contacts-container {
+  display: flex;
+  flex: 1;
+  height: 100%;
+  min-height: 0; // wichtig für korrektes Flexbox-Scrolling
+}
+
+.contacts-sidebar {
+  width: 300px;
+  background-color: var(--mat-sys-surface);
+  border-right: 1px solid var(--mat-sys-outline);
+  overflow-y: auto;
+  flex-shrink: 0;
+  height: 100%;
+  min-height: 0; // verhindert Überlauf bei Flexbox
+}
+
+.contacts-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.contact-item {
+  cursor: pointer;
+}
+
