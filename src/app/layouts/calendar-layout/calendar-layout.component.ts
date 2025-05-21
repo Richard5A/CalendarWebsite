@@ -1,23 +1,26 @@
-import {Component, inject, signal, WritableSignal} from '@angular/core';
-
-import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
-import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
-import { CalendarDisplayView } from './enums/calendar-display-view';
-import {Tables} from '../../../supabase_generated/database.types';
+import {Component, inject} from '@angular/core';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
+
+import {NavbarComponent} from '../../shared/components/navbar/navbar.component';
+import {SidebarComponent} from '../../shared/components/sidebar/sidebar.component';
+import {CalendarComponent} from '../../shared/components/calendar/calendar.component';
+
+import {CalendarDisplayView} from '../../shared/types/calendar-display-view';
+import {Tables} from '../../../supabase_generated/database.types';
 import {CalendarsService} from '../../core/services/calendars.service';
 
 @Component({
   selector: 'app-calendar-layout',
-  imports: [NavbarComponent, SidebarComponent, MatProgressSpinner],
+  imports: [NavbarComponent, SidebarComponent, MatProgressSpinner, CalendarComponent],
   templateUrl: './calendar-layout.component.html',
   styleUrl: './calendar-layout.component.less'
 })
 export class CalendarLayoutComponent {
   sidebarOpen: boolean = false;
+
   focusDay: Date = new Date();
-  calendarView: WritableSignal<CalendarDisplayView> = signal(CalendarDisplayView.WEEK);
-  calendarEvents: WritableSignal<Tables<"Events">[] | null> = signal(null);
+  calendarView: CalendarDisplayView = CalendarDisplayView.WEEK;
+  calendarEvents: Tables<"Events">[] | null = null;
   calendarService: CalendarsService = inject(CalendarsService)
 
   constructor() {
@@ -29,8 +32,7 @@ export class CalendarLayoutComponent {
   }
 
   calendarViewChanged(calendarView: CalendarDisplayView) {
-    this.calendarView.set(calendarView)
-
+    this.calendarView = calendarView;
   }
 
   loadEvents() {
@@ -38,8 +40,8 @@ export class CalendarLayoutComponent {
     this.calendarService.getCalendars().then(calendars => {
       this.calendarService.getCalendarsEvents(calendars.map(calendar => calendar.id))
         .then(events => {
-        this.calendarEvents.set(events);
-      })
+          this.calendarEvents = events;
+        })
     })
   }
 }

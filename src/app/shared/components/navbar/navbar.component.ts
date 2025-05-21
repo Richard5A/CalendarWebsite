@@ -7,7 +7,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {
   CalendarDisplayView,
   CalendarDisplayViewList
-} from '../../../layouts/calendar-layout/enums/calendar-display-view';
+} from '../../types/calendar-display-view';
 
 @Component({
   selector: 'app-navbar',
