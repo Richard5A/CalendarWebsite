@@ -5,7 +5,7 @@ import {NavbarComponent} from '../../shared/components/navbar/navbar.component';
 import {SidebarComponent} from '../../shared/components/sidebar/sidebar.component';
 import {CalendarComponent} from '../../shared/components/calendar/calendar.component';
 
-import {CalendarDisplayView} from '../../shared/types/calendar-display-view';
+import {CalendarDisplayView} from '../../shared/types/calendar-types';
 import {Tables} from '../../../supabase_generated/database.types';
 import {CalendarsService} from '../../core/services/calendars.service';
 

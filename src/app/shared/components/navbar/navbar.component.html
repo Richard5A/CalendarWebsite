@@ -3,10 +3,10 @@
     <mat-icon>menu</mat-icon>
   </button>
   <span>Mein Kalender</span>
-  <button mat-icon-button>
+  <button mat-icon-button (click)="onPrevious()">
     <mat-icon>arrow_left</mat-icon>
   </button>
-  <button mat-icon-button>
+  <button mat-icon-button (click)="onNext()">
     <mat-icon>arrow_right</mat-icon>
   </button>
   <span class="spacer"></span>
@@ -15,7 +15,7 @@
     <mat-option [value]="option">{{option}}</mat-option>
     }
   </mat-select>
-  <mat-button-toggle-group [hideSingleSelectionIndicator]="true" [value]="'calendar'">
+  <mat-button-toggle-group hideSingleSelectionIndicator value="calendar">
     <mat-button-toggle value="calendar">Kalender</mat-button-toggle>
     <mat-button-toggle value="tasks">Aufgaben</mat-button-toggle>
     <mat-button-toggle value="contacts">Kontakte</mat-button-toggle>

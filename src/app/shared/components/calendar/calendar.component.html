@@ -16,9 +16,7 @@
       @for (day of days; track day) {
         <div class="cell day-cell">
           @for (task of getTasksFor(day, hour); track task.id) {
-            <ng-container>
-              <app-task-block [task]="task"></app-task-block>
-            </ng-container>
+            <app-task-block [task]="task"></app-task-block>
           }
         </div>
       }
