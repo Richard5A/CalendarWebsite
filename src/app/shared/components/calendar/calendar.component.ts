@@ -16,17 +16,22 @@ import {CalendarService} from '../../services/calendar.service';
 export class CalendarComponent implements OnInit, OnDestroy {
   private sub!: Subscription;
 
-  @Input() type: CalendarDisplayView = CalendarDisplayView.WEEK;
-  @Input() calendarStart: Date = new Date();
+  private hours_in_milli = 60 * 60 * 1000;
+
+  @Input() calendarType: CalendarDisplayView = CalendarDisplayView.WEEK;
+  @Input() calendarStart: Date = this.getMonday();
 
   days = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+  offsets = Array.from(this.days, (_, i) => i);
   hours = Array.from({length: 24}, (_, i) => i);
 
-  private tasks: Task[] = [
-    {id: 0, title: "Flo Gefurtstag", info: "Test", color: "green", type: "app", fromDate: new Date(2025, 3, 29, 13), toDate: new Date(2025, 3, 29, 14)},
+  tasks: Task[] = [
+    {id: 0, title: "Flo Gefurtstag", info: "Test", color: "green", type: "app", fromDate: new Date(2025, 5, 23, 13), toDate: new Date(2025, 5, 23, 14)},
   ];
 
-  constructor(private calendarService: CalendarService) {}
+  constructor(private calendarService: CalendarService) {
+    console.log(this.calendarStart);
+  }
 
   ngOnInit(): void {
     this.sub = this.calendarService.action$.subscribe(action => {
@@ -48,17 +53,19 @@ export class CalendarComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  getTasksFor(day: string, hour: number): Task[] {
-    //TODO: Richtigen Tag & Zeit nehmen
+  getTasksFor(day_offset: number, hour: number): Task[] {
+    const timeStart: Date = new Date(this.calendarStart.getTime() + (day_offset * 24 + hour) * this.hours_in_milli);
+    const timeEnd: Date = new Date(timeStart.getTime() + this.hours_in_milli);
+
     return this.tasks.filter(v => {
-      return v.fromDate?.getHours() === hour && v.fromDate?.getDay() === this.days.indexOf(day);
+      return (v.fromDate && v.toDate) && (v.fromDate >= timeStart && v.toDate < timeEnd);
     });
   }
 
   private goRelative(amount: number): void {
     let deltaDays: number = 0;
 
-    switch (this.type) {
+    switch (this.calendarType) {
       case CalendarDisplayView.DAY:
         deltaDays = amount;
         break;
@@ -69,7 +76,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
         throw new Error("Not implemented yet. (Month)");
         break;
       case  CalendarDisplayView.YEAR:
-        throw new Error("Not implemented yet. (YEAR)");
+        throw new Error("Not implemented yet. (Year)");
         break;
     }
 
@@ -78,5 +85,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   private today(): void {
 
+  }
+
+  private getMonday(): Date {
+    let d = new Date();
+    var day = d.getDay(),
+      diff = d.getDate() - day + (day === 0 ? -6 : 1); // adjust when day is sunday
+    return new Date(d.setDate(diff));
   }
 }

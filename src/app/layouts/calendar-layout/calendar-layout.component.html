@@ -4,7 +4,7 @@
       <app-navbar (toggleSidebar)="toggleSidebar()" (calendarViewChanged)="calendarViewChanged($event)"/>
 
       <main class="main">
-        <app-calendar [type]="calendarView"></app-calendar>
+        <app-calendar [calendarType]="calendarView"></app-calendar>
         @if (calendarEvents == null) {
           <div class="loading">
             <mat-spinner></mat-spinner>
