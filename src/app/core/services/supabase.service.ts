@@ -42,6 +42,10 @@ export class SupabaseService {
     return this.supabase;
   }
 
+  get userId(): string | undefined {
+    return this.currentUserSubject.value?.id
+  }
+
   async signInWithEmail(credentials: SignInWithPasswordCredentials): Promise<AuthError | null> {
     console.log("Logging in with email:", credentials);
     const { error } = await this.supabase.auth.signInWithPassword(credentials);
