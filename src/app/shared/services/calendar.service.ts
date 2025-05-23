@@ -5,10 +5,17 @@ import {Subject} from 'rxjs';
   providedIn: 'root'
 })
 export class CalendarService {
-  private actionSubject = new Subject<string>();
-  public action$ = this.actionSubject.asObservable();
+  private calendarSwitchSubject = new Subject<string>();
+  public calendarSwitchAction$ = this.calendarSwitchSubject.asObservable();
 
-  triggerAction(action: string): void {
-    this.actionSubject.next(action);
+  private timeRangeSubject = new Subject<string>();
+  public timeRangeAction$ = this.timeRangeSubject.asObservable();
+
+  triggerCalendarSwitchAction(action: string): void {
+    this.calendarSwitchSubject.next(action);
+  }
+
+  triggerTimeRangeAction(action: string): void {
+    this.timeRangeSubject.next(action);
   }
 }

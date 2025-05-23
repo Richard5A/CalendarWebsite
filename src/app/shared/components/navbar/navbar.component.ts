@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Output} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, OnInit, Output} from '@angular/core';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatButtonModule} from '@angular/material/button';
 import {MatIconModule} from '@angular/material/icon';
@@ -7,6 +7,7 @@ import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
 import {CalendarDisplayView, CalendarDisplayViewList} from '../../types/calendar-types';
 import {CalendarService} from '../../services/calendar.service';
+import {Subscription} from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
@@ -14,19 +15,33 @@ import {CalendarService} from '../../services/calendar.service';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.less'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit, OnDestroy {
+  private sub!: Subscription;
+
   @Output() toggleSidebar = new EventEmitter<undefined>();
   @Output() calendarViewChanged = new EventEmitter<CalendarDisplayView>();
   protected readonly CalendarDisplayViewList = CalendarDisplayViewList;
 
+  timespanText: string = "";
+
   constructor(private calendarService: CalendarService) {}
 
+  ngOnInit(): void {
+    this.sub = this.calendarService.timeRangeAction$.subscribe((action: string) => {
+      this.timespanText = action;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.sub.unsubscribe();
+  }
+
   onNext() {
-    this.calendarService.triggerAction("next");
+    this.calendarService.triggerCalendarSwitchAction("next");
   }
 
   onPrevious() {
-    this.calendarService.triggerAction("previous");
+    this.calendarService.triggerCalendarSwitchAction("previous");
   }
 
   //TODO: Zurückspringen zu heute
