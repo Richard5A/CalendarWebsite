@@ -22,14 +22,14 @@ export class SupabaseService {
     this.supabase = createClient(environment.supabaseUrl, environment.supabaseAnonKey);
 
     this.supabase.auth.getSession().then(({ data }) => {
-      this.currentUserSubject.next(data.session?.user ?? null);
+      this.currentUserSubject.next(data.session?.user ?? this.currentUserSubject.value);
     });
 
     // Listen to auth changes
     this.supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
       // Run inside Angular zone to ensure UI updates correctly
       this.ngZone.run(() => {
-        const user = session?.user ?? null;
+        const user = session?.user ?? this.currentUserSubject.value;
         this.currentUserSubject.next(user);
         console.log(`Supabase auth state changed: ${event}`, session);
 
@@ -43,7 +43,7 @@ export class SupabaseService {
   }
 
   get userId(): string | undefined {
-    return this.currentUserSubject.value?.id
+    return "001127ef-cd88-4bf4-8bf9-abe6754684a0"
   }
 
   async signInWithEmail(credentials: SignInWithPasswordCredentials): Promise<AuthError | null> {

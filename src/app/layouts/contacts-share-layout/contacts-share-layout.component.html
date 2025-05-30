@@ -1,0 +1,36 @@
+@if (sharingInformation() == null) {
+<div class="loading">
+  <p>Loading sharing information...</p>
+</div>
+}
+
+Contact sharing of user {{sharingInformation()?.user?.first_name}}
+
+@for (sharings of sharingInformation()?.sharings; track sharings.group) {
+<div class="sharing-item">
+  <div class="sharing-group">
+    <h3>Group: {{ sharings.group.id}}</h3>
+    Permissions:
+    <ul>
+      @for (permission of sharings.permissions; track permission.personal_u_group_id) {
+        <li>contact info id: {{ permission.contact_info_id}}
+      }
+    </ul>
+    Who can see this:
+    <ul>
+      @for (user of sharings.users; track user.target_user_id) {
+        <li>user {{ user.target_user_id }}</li>
+      }
+      @for (role of sharings.roles; track role.target_role_id) {
+        <li>role {{ role.target_role_id }}</li>
+      }
+    </ul>
+
+
+  </div>
+  <div class="sharing-actions">
+<!--    <button (click)="removeSharing(sharings.group.id)">Remove</button>
+    <button (click)="editSharing(sharings.group.id)">Edit</button>-->
+  </div>
+</div>
+}
