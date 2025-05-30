@@ -26,7 +26,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   hours = Array.from({length: 24}, (_, i) => i);
 
   tasks: Task[] = [
-    {id: 0, title: "Flo Gefurtstag", info: "Test", color: "green", type: "app", fromDate: new Date(2025, 4, 23, 13), toDate: new Date(2025, 4, 23, 14)},
+    {id: 0, title: "Flo Gefurtstag", info: "Test", color: "green", type: "app", fromDate: new Date(2025, 4, 23, 13, 30), toDate: new Date(2025, 4, 23, 16, 30)},
   ];
 
   constructor(private calendarService: CalendarService) {
@@ -65,12 +65,12 @@ export class CalendarComponent implements OnInit, OnDestroy {
       console.log(timeStart);
       console.log(timeEnd);
       console.log(this.tasks.filter(v => {
-        return (v.fromDate && v.toDate) && (v.fromDate >= timeStart && v.toDate <= timeEnd);
+        return (v.fromDate && v.toDate) && (v.fromDate >= timeStart && v.fromDate < timeEnd);
       }));
     }
 
     return this.tasks.filter(v => {
-      return (v.fromDate && v.toDate) && (v.fromDate >= timeStart && v.toDate <= timeEnd);
+      return (v.fromDate && v.toDate) && (v.fromDate >= timeStart && v.fromDate < timeEnd);
     });
   }
 

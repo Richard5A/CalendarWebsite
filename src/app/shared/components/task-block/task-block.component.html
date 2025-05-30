@@ -1,4 +1,4 @@
-<div class="task-block" [style]="'--block-color: ' + task.color">
+<div class="task-block" [style.background-color]="task.color" [style.top]="blockTop" [style.height]="blockHeight">
   <h1 class="title"> {{task.title}} </h1>
 
   @if(task.info) {
