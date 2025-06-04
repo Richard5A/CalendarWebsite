@@ -1,24 +1,22 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {MatTableModule} from '@angular/material/table';
 import {Subscription} from 'rxjs';
 
-import {TaskBlockComponent} from '../task-block/task-block.component';
-import {CalendarDisplayView} from '../../types/calendar-types';
-import {Task} from '../../types/task-types';
-import {CalendarService} from '../../services/calendar.service';
+import {TaskBlockComponent} from '../../task-block/task-block.component';
+import {Task} from '../../../types/task-types';
+import {CalendarService} from '../../../services/calendar.service';
 
 @Component({
-  selector: 'app-calendar',
-  imports: [TaskBlockComponent, MatTableModule],
-  templateUrl: './calendar.component.html',
-  styleUrl: './calendar.component.less'
+  selector: 'app-calendar-week',
+  imports: [TaskBlockComponent],
+  templateUrl: './calendar-week.component.html',
+  styleUrl: './calendar-week.component.less'
 })
-export class CalendarComponent implements OnInit, OnDestroy {
+export class CalendarWeekComponent implements OnInit, OnDestroy {
   private sub!: Subscription;
 
+  private DAYS_SHOWN = 7;
   private hours_in_milli = 60 * 60 * 1000;
 
-  @Input() calendarType: CalendarDisplayView = CalendarDisplayView.WEEK;
   @Input() calendarStart: Date = this.getMonday();
 
   days = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
@@ -29,9 +27,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
     {id: 0, title: "Flo Gefurtstag", info: "Test", color: "green", type: "app", fromDate: new Date(2025, 4, 23, 13, 30), toDate: new Date(2025, 4, 23, 16, 30)},
   ];
 
-  constructor(private calendarService: CalendarService) {
-    console.log(this.calendarStart);
-  }
+  constructor(private calendarService: CalendarService) {}
 
   ngOnInit(): void {
     this.sub = this.calendarService.calendarSwitchAction$.subscribe(action => {
@@ -75,22 +71,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
   }
 
   private goRelative(amount: number): void {
-    let deltaDays: number = 0;
-
-    switch (this.calendarType) {
-      case CalendarDisplayView.DAY:
-        deltaDays = amount;
-        break;
-      case CalendarDisplayView.WEEK:
-        deltaDays = 7 * amount;
-        break;
-      case CalendarDisplayView.MONTH:
-        throw new Error("Not implemented yet. (Month)");
-        break;
-      case  CalendarDisplayView.YEAR:
-        throw new Error("Not implemented yet. (Year)");
-        break;
-    }
+    let deltaDays: number = this.DAYS_SHOWN * amount;
 
     this.calendarStart.setDate(this.calendarStart.getDate() + deltaDays);
   }
@@ -112,7 +93,7 @@ export class CalendarComponent implements OnInit, OnDestroy {
 
   private triggerTimeRangeUpdateAction(): void {
     const start = this.calendarStart.toLocaleDateString();
-    const end = new Date(this.calendarStart.getTime() + 6 * 24 * this.hours_in_milli).toLocaleDateString(); //TODO: Wenn nicht Wochenansicht, Konstante ändern
+    const end = new Date(this.calendarStart.getTime() + (this.DAYS_SHOWN - 1) * 24 * this.hours_in_milli).toLocaleDateString(); //TODO: Wenn nicht Wochenansicht, Konstante ändern
 
     this.calendarService.triggerTimeRangeAction(start + " - " + end);
   }

@@ -26,7 +26,7 @@ export class CalendarsService {
       .select('*')
       .eq('calendar_id', calendarId);
     if (error) {
-      console.error('Error fetching calendar events:', error);
+      console.error('Error fetching calendar-week events:', error);
       return [];
     }
     return data as Tables<"Events">[];
@@ -38,7 +38,7 @@ export class CalendarsService {
       .select('*')
       .in('calendar_id', calendarIds);
     if (error) {
-      console.error('Error fetching calendar events:', error);
+      console.error('Error fetching calendar-week events:', error);
       return [];
     }
     return data as Tables<"Events">[];
