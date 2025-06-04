@@ -1,0 +1,23 @@
+<div class="calendar-grid">
+  <!-- Header Row (Wochentage) -->
+  <div class="cell header-cell empty"></div>
+  @for (day of days; track day) {
+    <div class="cell header-cell">
+      {{ day }}
+    </div>
+  }
+
+  <!-- Stundenzeilen -->
+  @for (hour of hours; track hour) {
+    <div class="cell hour-cell">
+      {{ hour }}:00
+    </div>
+    @for (offset of offsets; track offset) {
+      <div class="cell day-cell">
+        @for (task of getTasksFor(offset, hour); track task.id) {
+          <app-task-block [task]="task"></app-task-block>
+        }
+      </div>
+    }
+  }
+</div>

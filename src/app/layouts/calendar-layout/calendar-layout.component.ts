@@ -3,15 +3,18 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 import {NavbarComponent} from '../../shared/components/navbar/navbar.component';
 import {SidebarComponent} from '../../shared/components/sidebar/sidebar.component';
-import {CalendarComponent} from '../../shared/components/calendar/calendar.component';
+import {CalendarWeekComponent} from '../../shared/components/calendar-types/calendar-week/calendar-week.component';
 
 import {CalendarDisplayView} from '../../shared/types/calendar-types';
 import {Tables} from '../../../supabase_generated/database.types';
 import {CalendarsService} from '../../core/services/calendars.service';
+import {
+  CalendarFivedaysComponent
+} from '../../shared/components/calendar-types/calendar-fivedays/calendar-fivedays.component';
 
 @Component({
-  selector: 'app-calendar-layout',
-  imports: [NavbarComponent, SidebarComponent, MatProgressSpinner, CalendarComponent],
+  selector: 'app-calendar-week-layout',
+  imports: [NavbarComponent, SidebarComponent, MatProgressSpinner, CalendarWeekComponent, CalendarFivedaysComponent],
   templateUrl: './calendar-layout.component.html',
   styleUrl: './calendar-layout.component.less'
 })
