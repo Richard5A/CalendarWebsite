@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, OnDestroy} from '@angular/core';
+import {Component, Input, OnInit, OnDestroy, model, effect} from '@angular/core';
 import {Subscription} from 'rxjs';
 
 import {TaskBlockComponent} from '../../task-block/task-block.component';
@@ -11,25 +11,53 @@ import {CalendarService} from '../../../services/calendar.service';
   templateUrl: './calendar-fivedays.component.html',
   styleUrl: './calendar-fivedays.component.less'
 })
-export class CalendarFivedaysComponent implements OnInit, OnDestroy{
+export class CalendarFivedaysComponent implements OnInit, OnDestroy {
   private sub!: Subscription;
 
   private DAYS_SHOWN = 5;
   private hours_in_milli = 60 * 60 * 1000;
 
-  @Input() calendarStart: Date = this.getToday();
+  @Input() tasks: Task[] = [];
+  calendarDate = model<Date>(); // Für Two-Way Binding
 
-  days = this.getWeekDays();
-  offsets = Array.from(this.days, (_, i) => i);
-  hours = Array.from({length: 24}, (_, i) => i);
+  // calendarStart wird in ngOnInit basierend auf dem Input von calendarDate initialisiert.
+  // Als Fallback dient das heutige Datum.
+  private calendarStart: Date = this.getToday();
 
-  tasks: Task[] = [
-    {id: 0, title: "Flo Gefurtstag", info: "Test", color: "green", type: "app", fromDate: new Date(2025, 4, 23, 13, 30), toDate: new Date(2025, 4, 23, 16, 30)},
-  ];
+  days: string[] = this.getWeekdays();
+  offsets: number[] = Array.from(this.days, (_, i) => i);
+  hours: number[] = Array.from({length: 24}, (_, i) => i);
 
-  constructor(private calendarService: CalendarService) {}
+  constructor(private calendarService: CalendarService) {
+    // 'effect' reagiert auf spätere Änderungen von calendarDate durch die Elternkomponente
+    effect(() => {
+      const dateFromParent = this.calendarDate();
+      if (dateFromParent) {
+        // Nur aktualisieren, wenn sich das Datum vom Parent tatsächlich von unserem internen calendarStart unterscheidet, um Endlosschleifen zu vermeiden.
+        if (!this.calendarStart || this.calendarStart.getTime() !== dateFromParent.getTime()) {
+          this.calendarStart = new Date(dateFromParent.getTime());
+          this.updateViewAndNotifyParent(); // Ansicht und abhängigen Zustand aktualisieren
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
+    // Hier ist der initiale Wert von [(calendarDate)]="focusDay" verfügbar.
+    const initialDateFromParent = this.calendarDate();
+
+    if (initialDateFromParent) {
+      // Wenn die Elternkomponente ein Datum bereitstellt, verwenden wir dieses.
+      this.calendarStart = new Date(initialDateFromParent.getTime());
+      console.log('ngOnInit: Initiales calendarDate vom Parent wird verwendet:', this.calendarStart);
+    } else {
+      // Fallback: Wenn kein initiales Datum vom Parent kommt.
+      // calendarStart hat bereits den Wert von getToday() durch seine Deklaration.
+      // Wir sollten diesen Standardwert an den Parent zurückmelden.
+      console.log('ngOnInit: Kein initiales calendarDate vom Parent. Aktuelles calendarStart (Standard ist heute):', this.calendarStart);
+      this.calendarDate.set(new Date(this.calendarStart.getTime()));
+    }
+
     this.sub = this.calendarService.calendarSwitchAction$.subscribe(action => {
       switch (action) {
         case "next":
@@ -42,16 +70,16 @@ export class CalendarFivedaysComponent implements OnInit, OnDestroy{
           this.gotoToday();
           break;
       }
-
-      this.triggerTimeRangeUpdateAction();
-      this.days = this.getWeekDays();
     });
 
-    this.triggerTimeRangeUpdateAction();
+    // Initiale Einrichtung der Ansicht basierend auf dem ermittelten calendarStart
+    this.updateViewAndNotifyParent();
   }
 
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
+    if (this.sub) { // Sicherstellen, dass sub existiert, bevor unsubscribe aufgerufen wird
+        this.sub.unsubscribe();
+    }
   }
 
   getTasksFor(day_offset: number, hour: number, debug = false): Task[] {
@@ -71,39 +99,60 @@ export class CalendarFivedaysComponent implements OnInit, OnDestroy{
     });
   }
 
-  private goRelative(amount: number): void {
-    let deltaDays: number = this.DAYS_SHOWN * amount;
+  // Diese Methode aktualisiert den internen Zustand (wie 'days') und gibt den 'calendarStart'-Wert über das 'calendarDate'-Model an den Parent zurück.
+  private updateViewAndNotifyParent(): void {
+    // Das Model-Output (calendarDate) aktualisieren, wenn sich das interne calendarStart geändert hat.
+    // Stellt sicher, dass Two-Way Binding funktioniert, wenn calendarStart intern modifiziert wird.
+    if (this.calendarStart) { // Sicherstellen, dass calendarStart initialisiert ist
+      const currentDateModel = this.calendarDate();
+      if (!currentDateModel || currentDateModel.getTime() !== this.calendarStart.getTime()) {
+        this.calendarDate.set(new Date(this.calendarStart.getTime()));
+      }
+    }
 
-    this.calendarStart.setDate(this.calendarStart.getDate() + deltaDays);
+    this.days = this.getWeekdays(); // Abhängig von calendarStart
+    this.triggerTimeRangeUpdateAction(); // Abhängig von calendarStart
+  }
+
+  private goRelative(amount: number): void {
+    const deltaDays: number = this.DAYS_SHOWN * amount;
+
+    const newDate = new Date(this.calendarStart.getTime());
+    newDate.setDate(newDate.getDate() + deltaDays);
+    this.calendarStart = newDate;
+    this.updateViewAndNotifyParent();
   }
 
   private gotoToday(): void {
-    //TODO
+    this.calendarStart = this.getToday();
+    this.updateViewAndNotifyParent();
   }
 
   private getToday(): Date {
     const today = new Date();
-    today.setHours(0, 0, 0, 0); // Setze Uhrzeit auf Mitternacht
+    today.setHours(0, 0, 0, 0);
     return today;
   }
 
-  private getWeekDays(): string[] {
+  private getWeekdays(): string[] {
     const weekdays: string[] = ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'];
     const result: string[] = [];
-    const date = new Date(this.calendarStart);
+
+    const date = new Date(this.calendarStart.getTime());
 
     for (let i = 0; i < this.DAYS_SHOWN; i++) {
       result.push(weekdays[date.getDay()]);
       date.setDate(date.getDate() + 1);
     }
-
     return result;
   }
 
   private triggerTimeRangeUpdateAction(): void {
+    // Sicherstellen, dass calendarStart initialisiert ist
+    if (!this.calendarStart) return;
+
     const start = this.calendarStart.toLocaleDateString();
     const end = new Date(this.calendarStart.getTime() + (this.DAYS_SHOWN - 1) * 24 * this.hours_in_milli).toLocaleDateString();
-
     this.calendarService.triggerTimeRangeAction(start + " - " + end);
   }
 }

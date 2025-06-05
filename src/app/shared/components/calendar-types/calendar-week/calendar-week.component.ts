@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, Input, OnInit, OnDestroy, model, effect} from '@angular/core';
 import {Subscription} from 'rxjs';
 
 import {TaskBlockComponent} from '../../task-block/task-block.component';
@@ -17,19 +17,35 @@ export class CalendarWeekComponent implements OnInit, OnDestroy {
   private DAYS_SHOWN = 7;
   private hours_in_milli = 60 * 60 * 1000;
 
-  @Input() calendarStart: Date = this.getMonday();
+  @Input() tasks: Task[] = [];
+  calendarDate = model<Date>();
+  private calendarStart: Date = this.getMondayOfWeek();
 
-  days = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
-  offsets = Array.from(this.days, (_, i) => i);
-  hours = Array.from({length: 24}, (_, i) => i);
+  days: string[] = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
+  offsets: number[] = Array.from(this.days, (_, i) => i);
+  hours: number[] = Array.from({length: 24}, (_, i) => i);
 
-  tasks: Task[] = [
-    {id: 0, title: "Flo Gefurtstag", info: "Test", color: "green", type: "app", fromDate: new Date(2025, 4, 23, 13, 30), toDate: new Date(2025, 4, 23, 16, 30)},
-  ];
-
-  constructor(private calendarService: CalendarService) {}
+  constructor(private calendarService: CalendarService) {
+    effect(() => {
+      const dateFromParent = this.calendarDate();
+      if (dateFromParent) {
+        if (!this.calendarStart || this.calendarStart.getTime() !== dateFromParent.getTime()) {
+          this.calendarStart = new Date(dateFromParent.getTime());
+          this.updateViewAndNotifyParent();
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
+    const initialDateFromParent = this.calendarDate();
+
+    if (initialDateFromParent) {
+      this.calendarStart = this.getMondayOfWeek(initialDateFromParent);
+    } else {
+      this.calendarDate.set(new Date(this.calendarStart.getTime()));
+    }
+
     this.sub = this.calendarService.calendarSwitchAction$.subscribe(action => {
       switch (action) {
         case "next":
@@ -42,15 +58,15 @@ export class CalendarWeekComponent implements OnInit, OnDestroy {
           this.gotoToday();
           break;
       }
-
-      this.triggerTimeRangeUpdateAction();
     });
 
-    this.triggerTimeRangeUpdateAction();
+    this.updateViewAndNotifyParent();
   }
 
   ngOnDestroy(): void {
-    this.sub.unsubscribe();
+    if (this.sub) {
+      this.sub.unsubscribe();
+    }
   }
 
   getTasksFor(day_offset: number, hour: number, debug = false): Task[] {
@@ -70,30 +86,47 @@ export class CalendarWeekComponent implements OnInit, OnDestroy {
     });
   }
 
-  private goRelative(amount: number): void {
-    let deltaDays: number = this.DAYS_SHOWN * amount;
+  private updateViewAndNotifyParent(): void {
+    if (this.calendarStart) {
+      const currentDateModel = this.calendarDate();
+      if (!currentDateModel || currentDateModel.getTime() !== this.calendarStart.getTime()) {
+        this.calendarDate.set(new Date(this.calendarStart.getTime()));
+      }
+    }
 
-    this.calendarStart.setDate(this.calendarStart.getDate() + deltaDays);
+    this.triggerTimeRangeUpdateAction();
+  }
+
+  private goRelative(amount: number): void {
+    const deltaDays: number = this.DAYS_SHOWN * amount;
+
+    const newDate = new Date(this.calendarStart.getTime());
+    newDate.setDate(newDate.getDate() + deltaDays);
+    this.calendarStart = newDate;
+    this.triggerTimeRangeUpdateAction();
   }
 
   private gotoToday(): void {
-    //TODO
+    this.calendarStart = this.getMondayOfWeek();
+    this.triggerTimeRangeUpdateAction();
   }
 
-  private getMonday(): Date {
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Setze Uhrzeit auf Mitternacht
+  private getMondayOfWeek(given: Date = new Date()): Date {
+    const day: Date = new Date(given.getTime());
+    day.setHours(0, 0, 0, 0); // Setze Uhrzeit auf Mitternacht
 
-    const dayOfWeek = today.getDay(); // 0 = Sonntag, 1 = Montag, ..., 6 = Samstag
+    const dayOfWeek = day.getDay(); // 0 = Sonntag, 1 = Montag, ..., 6 = Samstag
     const offset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
 
-    today.setDate(today.getDate() + offset);
-    return today;
+    day.setDate(day.getDate() + offset);
+    return day;
   }
 
   private triggerTimeRangeUpdateAction(): void {
+    if (!this.calendarStart) return;
+
     const start = this.calendarStart.toLocaleDateString();
-    const end = new Date(this.calendarStart.getTime() + (this.DAYS_SHOWN - 1) * 24 * this.hours_in_milli).toLocaleDateString(); //TODO: Wenn nicht Wochenansicht, Konstante ändern
+    const end = new Date(this.calendarStart.getTime() + (this.DAYS_SHOWN - 1) * 24 * this.hours_in_milli).toLocaleDateString();
 
     this.calendarService.triggerTimeRangeAction(start + " - " + end);
   }

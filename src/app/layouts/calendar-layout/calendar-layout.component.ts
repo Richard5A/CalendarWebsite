@@ -4,13 +4,12 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {NavbarComponent} from '../../shared/components/navbar/navbar.component';
 import {SidebarComponent} from '../../shared/components/sidebar/sidebar.component';
 import {CalendarWeekComponent} from '../../shared/components/calendar-types/calendar-week/calendar-week.component';
+import {CalendarFivedaysComponent} from '../../shared/components/calendar-types/calendar-fivedays/calendar-fivedays.component';
 
 import {CalendarDisplayView} from '../../shared/types/calendar-types';
-import {Tables} from '../../../supabase_generated/database.types';
 import {CalendarsService} from '../../core/services/calendars.service';
-import {
-  CalendarFivedaysComponent
-} from '../../shared/components/calendar-types/calendar-fivedays/calendar-fivedays.component';
+import {Tables} from '../../../supabase_generated/database.types';
+import {Task} from '../../shared/types/task-types';
 
 @Component({
   selector: 'app-calendar-week-layout',
@@ -21,10 +20,14 @@ import {
 export class CalendarLayoutComponent {
   sidebarOpen: boolean = false;
 
-  focusDay: Date = new Date();
+  focusDay!: Date;
   calendarView: CalendarDisplayView = CalendarDisplayView.WEEK;
   calendarEvents: Tables<"Events">[] | null = null;
   calendarService: CalendarsService = inject(CalendarsService)
+
+  tasks: Task[] = [
+    {id: 0, title: "Flo Gefurtstag", info: "Test", color: "green", type: "app", fromDate: new Date(2025, 4, 23, 13, 30), toDate: new Date(2025, 4, 23, 16, 30)},
+  ];
 
   constructor() {
     this.loadEvents();
@@ -36,6 +39,7 @@ export class CalendarLayoutComponent {
 
   calendarViewChanged(calendarView: CalendarDisplayView) {
     this.calendarView = calendarView;
+    console.log(this.calendarView);
   }
 
   loadEvents() {
@@ -47,4 +51,6 @@ export class CalendarLayoutComponent {
         })
     })
   }
+
+  protected readonly CalendarDisplayView = CalendarDisplayView;
 }

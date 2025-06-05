@@ -4,7 +4,24 @@
       <app-navbar (toggleSidebar)="toggleSidebar()" (calendarViewChanged)="calendarViewChanged($event)"/>
 
       <main class="main">
-        <app-calendar-fivedays></app-calendar-fivedays>
+        @switch (calendarView) {
+          @case (CalendarDisplayView.DAY) {
+            <p>Noch nicht entwickelt! (DAY)</p>
+          }
+          @case (CalendarDisplayView.FIVE_DAYS) {
+            <app-calendar-fivedays [tasks]="tasks" [(calendarDate)]="focusDay"></app-calendar-fivedays>
+          }
+          @case (CalendarDisplayView.WEEK) {
+            <app-calendar-week [tasks]="tasks" [(calendarDate)]="focusDay"></app-calendar-week>
+          }
+          @case (CalendarDisplayView.MONTH) {
+            <p>Noch nicht entwickelt! (MONTH)</p>
+          }
+          @case (CalendarDisplayView.YEAR) {
+            <p>Noch nicht entwickelt! (YEAR)</p>
+          }
+        }
+
         @if (calendarEvents == null) {
           <div class="loading">
             <mat-spinner></mat-spinner>
