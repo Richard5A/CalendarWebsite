@@ -6,7 +6,7 @@
       <main class="main">
         @switch (calendarView) {
           @case (CalendarDisplayView.DAY) {
-            <p>Noch nicht entwickelt! (DAY)</p>
+            <app-calendar-day [tasks]="tasks" [(calendarDate)]="focusDay"></app-calendar-day>
           }
           @case (CalendarDisplayView.FIVE_DAYS) {
             <app-calendar-fivedays [tasks]="tasks" [(calendarDate)]="focusDay"></app-calendar-fivedays>

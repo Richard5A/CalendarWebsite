@@ -7,23 +7,22 @@ import {CalendarService} from '../../../services/calendar.service';
 
 // See calendar-fivedays.component.ts for more information about this code.
 @Component({
-  selector: 'app-calendar-week',
+  selector: 'app-calendar-day',
   imports: [TaskBlockComponent],
-  templateUrl: './calendar-week.component.html',
-  styleUrl: './calendar-week.component.less'
+  templateUrl: './calendar-day.component.html',
+  styleUrl: './calendar-day.component.less'
 })
-export class CalendarWeekComponent implements OnInit, OnDestroy {
+export class CalendarDayComponent implements OnInit, OnDestroy {
   private sub!: Subscription;
 
-  private DAYS_SHOWN = 7;
+  private DAYS_SHOWN = 1;
   private hours_in_milli = 60 * 60 * 1000;
 
   @Input() tasks: Task[] = [];
   calendarDate = model<Date>();
-  private calendarStart: Date = this.getMondayOfWeek();
+  private calendarStart: Date = this.getToday();
 
-  days: string[] = ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa', 'So'];
-  offsets: number[] = Array.from(this.days, (_, i) => i);
+  day_displayed: string = "";
   hours: number[] = Array.from({length: 24}, (_, i) => i);
 
   constructor(private calendarService: CalendarService) {
@@ -42,7 +41,7 @@ export class CalendarWeekComponent implements OnInit, OnDestroy {
     const initialDateFromParent = this.calendarDate();
 
     if (initialDateFromParent) {
-      this.calendarStart = this.getMondayOfWeek(initialDateFromParent);
+      this.calendarStart.setTime(initialDateFromParent.getTime());
     } else {
       this.calendarDate.set(new Date(this.calendarStart.getTime()));
     }
@@ -70,8 +69,8 @@ export class CalendarWeekComponent implements OnInit, OnDestroy {
     }
   }
 
-  getTasksFor(day_offset: number, hour: number, debug = false): Task[] {
-    const timeStart: Date = new Date(this.calendarStart.getTime() + (day_offset * 24 + hour) * this.hours_in_milli);
+  getTasksFor(hour: number, debug = false): Task[] {
+    const timeStart: Date = new Date(this.calendarStart.getTime() + hour * this.hours_in_milli);
     const timeEnd: Date = new Date(timeStart.getTime() + this.hours_in_milli);
 
     if (debug) {
@@ -94,7 +93,10 @@ export class CalendarWeekComponent implements OnInit, OnDestroy {
         this.calendarDate.set(new Date(this.calendarStart.getTime()));
       }
     }
+    const weekdays: string[] = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
 
+    this.day_displayed = weekdays[this.calendarStart.getDay()];
+    console.log(this.day_displayed);
     this.triggerTimeRangeUpdateAction();
   }
 
@@ -104,16 +106,16 @@ export class CalendarWeekComponent implements OnInit, OnDestroy {
     const newDate = new Date(this.calendarStart.getTime());
     newDate.setDate(newDate.getDate() + deltaDays);
     this.calendarStart = newDate;
-    this.triggerTimeRangeUpdateAction();
+    this.updateViewAndNotifyParent();
   }
 
   private gotoToday(): void {
-    this.calendarStart = this.getMondayOfWeek();
-    this.triggerTimeRangeUpdateAction();
+    this.calendarStart = this.getToday();
+    this.updateViewAndNotifyParent();
   }
 
-  private getMondayOfWeek(given: Date = new Date()): Date {
-    const day: Date = new Date(given.getTime());
+  private getToday(): Date {
+    const day: Date = new Date();
     day.setHours(0, 0, 0, 0); // Setze Uhrzeit auf Mitternacht
 
     const dayOfWeek = day.getDay(); // 0 = Sonntag, 1 = Montag, ..., 6 = Samstag
@@ -126,9 +128,8 @@ export class CalendarWeekComponent implements OnInit, OnDestroy {
   private triggerTimeRangeUpdateAction(): void {
     if (!this.calendarStart) return;
 
-    const start = this.calendarStart.toLocaleDateString();
-    const end = new Date(this.calendarStart.getTime() + (this.DAYS_SHOWN - 1) * 24 * this.hours_in_milli).toLocaleDateString();
+    const day = this.calendarStart.toLocaleDateString();
 
-    this.calendarService.triggerTimeRangeAction(start + " - " + end);
+    this.calendarService.triggerTimeRangeAction(day);
   }
 }

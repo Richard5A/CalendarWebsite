@@ -10,10 +10,11 @@ import {CalendarDisplayView} from '../../shared/types/calendar-types';
 import {CalendarsService} from '../../core/services/calendars.service';
 import {Tables} from '../../../supabase_generated/database.types';
 import {Task} from '../../shared/types/task-types';
+import {CalendarDayComponent} from '../../shared/components/calendar-types/calendar-day/calendar-day.component';
 
 @Component({
   selector: 'app-calendar-week-layout',
-  imports: [NavbarComponent, SidebarComponent, MatProgressSpinner, CalendarWeekComponent, CalendarFivedaysComponent],
+  imports: [NavbarComponent, SidebarComponent, MatProgressSpinner, CalendarWeekComponent, CalendarFivedaysComponent, CalendarDayComponent],
   templateUrl: './calendar-layout.component.html',
   styleUrl: './calendar-layout.component.less'
 })
@@ -39,7 +40,6 @@ export class CalendarLayoutComponent {
 
   calendarViewChanged(calendarView: CalendarDisplayView) {
     this.calendarView = calendarView;
-    console.log(this.calendarView);
   }
 
   loadEvents() {

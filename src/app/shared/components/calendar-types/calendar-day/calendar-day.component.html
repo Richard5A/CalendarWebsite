@@ -1,0 +1,19 @@
+<div class="calendar-grid">
+  <!-- Header Row (Wochentage) -->
+  <div class="cell header-cell empty"></div>
+    <div class="cell header-cell">
+      {{ day_displayed }}
+    </div>
+
+  <!-- Stundenzeilen -->
+  @for (hour of hours; track hour) {
+    <div class="cell hour-cell">
+      {{ hour }}:00
+    </div>
+    <div class="cell day-cell">
+      @for (task of getTasksFor(hour); track task.id) {
+        <app-task-block [task]="task"></app-task-block>
+      }
+    </div>
+  }
+</div>
