@@ -1,4 +1,4 @@
-import {Component, inject} from '@angular/core';
+import {Component, inject, OnInit} from '@angular/core';
 import {MatProgressSpinner} from '@angular/material/progress-spinner';
 
 import {NavbarComponent} from '../../shared/components/navbar/navbar.component';
@@ -18,7 +18,7 @@ import {CalendarDayComponent} from '../../shared/components/calendar-types/calen
   templateUrl: './calendar-layout.component.html',
   styleUrl: './calendar-layout.component.less'
 })
-export class CalendarLayoutComponent {
+export class CalendarLayoutComponent implements OnInit {
   sidebarOpen: boolean = false;
 
   focusDay!: Date;
@@ -32,6 +32,11 @@ export class CalendarLayoutComponent {
 
   constructor() {
     this.loadEvents();
+  }
+
+  ngOnInit(): void {
+    this.focusDay = new Date();
+    this.focusDay.setHours(0, 0, 0, 0);
   }
 
   toggleSidebar() {

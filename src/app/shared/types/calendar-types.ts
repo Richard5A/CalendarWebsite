@@ -8,10 +8,10 @@ export enum CalendarDisplayView {
 }
 
 export const CalendarDisplayViewList = [
-    CalendarDisplayView.DAY,
-    CalendarDisplayView.WEEK,
-    CalendarDisplayView.MONTH,
-    CalendarDisplayView.AGENDA,
-    CalendarDisplayView.YEAR,
-    CalendarDisplayView.FIVE_DAYS,
+   {name: "Tag", id: CalendarDisplayView.DAY},
+   {name: "Woche", id: CalendarDisplayView.WEEK},
+   {name: "Monat", id: CalendarDisplayView.MONTH},
+   {name: "Agenda", id: CalendarDisplayView.AGENDA},
+   {name: "Jahr", id: CalendarDisplayView.YEAR},
+   {name: "5 Tage", id: CalendarDisplayView.FIVE_DAYS},
 ];

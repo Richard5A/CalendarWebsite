@@ -116,12 +116,7 @@ export class CalendarDayComponent implements OnInit, OnDestroy {
 
   private getToday(): Date {
     const day: Date = new Date();
-    day.setHours(0, 0, 0, 0); // Setze Uhrzeit auf Mitternacht
-
-    const dayOfWeek = day.getDay(); // 0 = Sonntag, 1 = Montag, ..., 6 = Samstag
-    const offset = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-
-    day.setDate(day.getDate() + offset);
+    day.setHours(0, 0, 0, 0);
     return day;
   }
 
