@@ -1,4 +1,4 @@
-export enum CalendarDisplayView {
+export enum CalendarDisplayType {
     DAY = "day",
     WEEK = "week",
     MONTH = "month",
@@ -7,11 +7,17 @@ export enum CalendarDisplayView {
     FIVE_DAYS = "5days",
 }
 
+export enum ViewType {
+  CALENDAR = "calendar",
+  TASKS = "tasks",
+  CONTACTS = "contacts"
+}
+
 export const CalendarDisplayViewList = [
-   {name: "Tag", id: CalendarDisplayView.DAY},
-   {name: "Woche", id: CalendarDisplayView.WEEK},
-   {name: "Monat", id: CalendarDisplayView.MONTH},
-   {name: "Agenda", id: CalendarDisplayView.AGENDA},
-   {name: "Jahr", id: CalendarDisplayView.YEAR},
-   {name: "5 Tage", id: CalendarDisplayView.FIVE_DAYS},
+   {name: "Tag", id: CalendarDisplayType.DAY},
+   {name: "Woche", id: CalendarDisplayType.WEEK},
+   {name: "Monat", id: CalendarDisplayType.MONTH},
+   {name: "Agenda", id: CalendarDisplayType.AGENDA},
+   {name: "Jahr", id: CalendarDisplayType.YEAR},
+   {name: "5 Tage", id: CalendarDisplayType.FIVE_DAYS},
 ];

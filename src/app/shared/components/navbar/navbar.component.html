@@ -10,13 +10,13 @@
     <mat-icon>arrow_right</mat-icon>
   </button>
   <span class="timespan-text">{{timespanText}}</span>
-  <span class="spacer"></span>
   <mat-select class="view-select" (selectionChange)="calendarViewChanged.emit($event.value)" [value]="'week'">
     @for (option of CalendarDisplayViewList; track option.id) {
     <mat-option [value]="option.id">{{option.name}}</mat-option>
     }
   </mat-select>
-  <mat-button-toggle-group hideSingleSelectionIndicator value="calendar">
+  <span class="spacer"></span>
+  <mat-button-toggle-group hideSingleSelectionIndicator value="calendar" (change)="onViewChange($event.value)">
     <mat-button-toggle value="calendar">Kalender</mat-button-toggle>
     <mat-button-toggle value="tasks">Aufgaben</mat-button-toggle>
     <mat-button-toggle value="contacts">Kontakte</mat-button-toggle>

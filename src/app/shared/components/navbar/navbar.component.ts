@@ -5,7 +5,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
 import {MatButtonToggleModule} from '@angular/material/button-toggle';
 
-import {CalendarDisplayView, CalendarDisplayViewList} from '../../types/calendar-types';
+import {CalendarDisplayType, CalendarDisplayViewList, ViewType} from '../../types/calendar-types';
 import {CalendarService} from '../../services/calendar.service';
 import {Subscription} from 'rxjs';
 
@@ -19,7 +19,8 @@ export class NavbarComponent implements OnInit, OnDestroy {
   private sub!: Subscription;
 
   @Output() toggleSidebar = new EventEmitter<undefined>();
-  @Output() calendarViewChanged = new EventEmitter<CalendarDisplayView>();
+  @Output() calendarViewChanged = new EventEmitter<CalendarDisplayType>();
+  @Output() viewSelection = new EventEmitter<ViewType>();
   protected readonly CalendarDisplayViewList = CalendarDisplayViewList;
 
   timespanText: string = "";
@@ -42,6 +43,22 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   onPrevious() {
     this.calendarService.triggerCalendarSwitchAction("previous");
+  }
+
+  onViewChange(view: "calendar" | "tasks" | "contacts") {
+    let viewType: ViewType;
+    switch (view) {
+      case "calendar":
+        viewType = ViewType.CALENDAR;
+        break;
+      case "tasks":
+        viewType = ViewType.TASKS;
+        break;
+      case "contacts":
+        viewType = ViewType.CONTACTS;
+        break;
+    }
+   this.viewSelection.emit(viewType);
   }
 
   //TODO: Zurückspringen zu heute

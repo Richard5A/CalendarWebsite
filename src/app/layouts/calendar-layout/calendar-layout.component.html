@@ -1,10 +1,10 @@
 <div class="main-component">
   <app-sidebar [sidebarOpen]="sidebarOpen">
     <div class="container">
-      <app-navbar (toggleSidebar)="toggleSidebar()" (calendarViewChanged)="calendarViewChanged($event)"/>
+      <app-navbar (toggleSidebar)="toggleSidebar()" (calendarViewChanged)="calendarTypeChanged($event)" (viewSelection)="viewChanged($event)"/>
 
       <main class="main">
-        @switch (calendarView) {
+        @switch (calendarType) {
           @case (CalendarDisplayView.DAY) {
             <app-calendar-day [tasks]="tasks" [(calendarDate)]="focusDay"></app-calendar-day>
           }
@@ -13,6 +13,9 @@
           }
           @case (CalendarDisplayView.WEEK) {
             <app-calendar-week [tasks]="tasks" [(calendarDate)]="focusDay"></app-calendar-week>
+          }
+          @case (CalendarDisplayView.AGENDA) {
+            <p>Noch nicht entwickelt! (AGENDA)</p>
           }
           @case (CalendarDisplayView.MONTH) {
             <p>Noch nicht entwickelt! (MONTH)</p>

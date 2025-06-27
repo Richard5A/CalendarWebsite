@@ -4,9 +4,11 @@ import {MatProgressSpinner} from '@angular/material/progress-spinner';
 import {NavbarComponent} from '../../shared/components/navbar/navbar.component';
 import {SidebarComponent} from '../../shared/components/sidebar/sidebar.component';
 import {CalendarWeekComponent} from '../../shared/components/calendar-types/calendar-week/calendar-week.component';
-import {CalendarFivedaysComponent} from '../../shared/components/calendar-types/calendar-fivedays/calendar-fivedays.component';
+import {
+  CalendarFivedaysComponent
+} from '../../shared/components/calendar-types/calendar-fivedays/calendar-fivedays.component';
 
-import {CalendarDisplayView} from '../../shared/types/calendar-types';
+import {CalendarDisplayType, ViewType} from '../../shared/types/calendar-types';
 import {CalendarsService} from '../../core/services/calendars.service';
 import {Tables} from '../../../supabase_generated/database.types';
 import {Task} from '../../shared/types/task-types';
@@ -22,7 +24,7 @@ export class CalendarLayoutComponent implements OnInit {
   sidebarOpen: boolean = false;
 
   focusDay!: Date;
-  calendarView: CalendarDisplayView = CalendarDisplayView.WEEK;
+  calendarType: CalendarDisplayType = CalendarDisplayType.WEEK;
   calendarEvents: Tables<"Events">[] | null = null;
   calendarService: CalendarsService = inject(CalendarsService)
 
@@ -43,8 +45,19 @@ export class CalendarLayoutComponent implements OnInit {
     this.sidebarOpen = !this.sidebarOpen;
   }
 
-  calendarViewChanged(calendarView: CalendarDisplayView) {
-    this.calendarView = calendarView;
+  calendarTypeChanged(calendarType: CalendarDisplayType) {
+    this.calendarType = calendarType;
+  }
+
+  viewChanged(view: ViewType) {
+   switch (view) {
+     case ViewType.TASKS:
+       window.location.href = "/tasks";
+       break;
+     case ViewType.CONTACTS:
+       window.location.href = "/contacts";
+       break;
+   }
   }
 
   loadEvents() {
@@ -57,5 +70,5 @@ export class CalendarLayoutComponent implements OnInit {
     })
   }
 
-  protected readonly CalendarDisplayView = CalendarDisplayView;
+  protected readonly CalendarDisplayView = CalendarDisplayType;
 }
