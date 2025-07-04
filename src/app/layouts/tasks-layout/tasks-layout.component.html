@@ -1,0 +1,18 @@
+<main>
+  <mat-toolbar class="toolbar">
+    <span>Aufgaben</span>
+    <span class="spacer"></span>
+    <mat-button-toggle-group hideSingleSelectionIndicator value="tasks" (change)="onViewChange($event.value)">
+      <mat-button-toggle value="calendar">Kalender</mat-button-toggle>
+      <mat-button-toggle value="tasks">Aufgaben</mat-button-toggle>
+      <mat-button-toggle value="contacts">Kontakte</mat-button-toggle>
+    </mat-button-toggle-group>
+  </mat-toolbar>
+  <div class="content">
+    <section class="tasks">
+      <app-task></app-task>
+      <app-task></app-task>
+      <app-task></app-task>
+    </section>
+  </div>
+</main>

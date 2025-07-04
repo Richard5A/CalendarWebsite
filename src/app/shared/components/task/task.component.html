@@ -1,0 +1,9 @@
+<div class="task">
+  <mat-icon>check_circle</mat-icon>
+  <div [style.align-self]="description ? 'flex-start' : 'center'">
+    <h1 class="task-title">Müll Rausbringen</h1>
+    @if (description) {
+      <div class="description">{{ description }}</div>
+    }
+  </div>
+</div>

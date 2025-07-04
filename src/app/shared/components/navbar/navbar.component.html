@@ -10,6 +10,7 @@
     <mat-icon>arrow_right</mat-icon>
   </button>
   <span class="timespan-text">{{timespanText}}</span>
+  <span class="spacer"></span>
   <mat-select class="view-select" (selectionChange)="calendarViewChanged.emit($event.value)" [value]="'week'">
     @for (option of CalendarDisplayViewList; track option.id) {
     <mat-option [value]="option.id">{{option.name}}</mat-option>
